@@ -1,0 +1,12 @@
+{
+  "name": "pensieve-api",
+  "description": "",
+  "version": "0.1.0",
+  "dependencies": {
+    "serverless": "^2.7.0"
+  },
+  "devDependencies": {
+    "serverless-python-requirements": "^5.1.0",
+    "serverless-wsgi": "^1.7.5"
+  }
+}

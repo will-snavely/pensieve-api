@@ -1,0 +1,44 @@
+service: pensieve-api
+
+provider:
+  name: aws
+  runtime: python3.8
+  stage: ${opt:stage, "dev"}
+  region: us-east-1
+  environment:
+    APP_SETTINGS: ${env:APP_SETTINGS} 
+    DATABASE_URL: ${env:DATABASE_URL} 
+  vpc:
+    securityGroupIds:
+      - "sg-09590acb7c5e28f5d"
+    subnetIds:
+      - "subnet-0dc9109d0625b3ee8"
+      - "subnet-030ac56bb8e518dbe"
+
+plugins:
+  - serverless-wsgi
+  - serverless-python-requirements
+
+functions:
+  api:
+    handler: wsgi_handler.handler
+    events:
+      - http: 
+          method: ANY
+          path: /
+          #authorizer:
+          #  name: authorizer
+          #  arn: arn:aws:cognito-idp:us-east-1:123456789:userpool/us-east-1_XXXXXX
+      - http: 
+          method: ANY 
+          path: "{proxy+}"
+          #authorizer:
+          #  name: authorizer
+          #  arn: arn:aws:cognito-idp:us-east-1:123456789:userpool/us-east-1_XXXXXX
+
+custom:
+  wsgi:
+    app: pensieve.app
+    packRequirements: false
+  pythonRequirements:
+    dockerizePip: non-linux
